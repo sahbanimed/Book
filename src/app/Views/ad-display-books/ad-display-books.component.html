@@ -1,0 +1,139 @@
+<div>
+    <nav class="navbar navbar-dark" style="margin-bottom:3%;background-color:#65c69c;">
+        <a class="navbar-brand" href="#">Adictiz</a>
+    </nav>
+    <div class="row" style="margin-left: 1%;margin-right: 1%;">
+        <div class="col-md-2">
+            <div class="card  ">
+                <div class="card-header text-white" style="background-color:#65c69c;">
+                    <h5 align="center ">Catégories</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <a (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">Langue</a>
+                    </p>
+                    <div id="collapseExample" [ngbCollapse]="isCollapsed">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="radio">
+                                    <label><input type="radio" value="" [(ngModel)]="bookFilter.language" >Tous</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" value="fr" [(ngModel)]="bookFilter.language" >Francais</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" value="en" [(ngModel)]="bookFilter.language" >Anglais</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" value="ar" [(ngModel)]="bookFilter.language">Arabe</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header text-white" style="background-color:#65c69c;">
+                    <h5 align="center ">Listes des livres</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="spacing-left spacing-right">
+                                    <input type="text" [(ngModel)]="bookFilter.title" placeholder="Titre" />
+                                </div>
+                                <div class="spacing-right">
+                                    <select class="dropdown show" type="text" [(ngModel)]="bookFilter.categories">
+                                        <option value="" disabled selected>Choisir une catégorie</option>
+                                        <option value="">Tous</option>
+                                        <option value="Ocean travel">Ocean travel</option>
+                                        <option value="Children's stories">Children's stories</option>
+                                        <option value="Juvenile Fiction">Juvenile Fiction</option>
+                                        <option value="Comics & Graphic Novels">Comics & Graphic Novels</option>
+                                        <option value="Operas">Operas</option>
+                                        <option value="Fiction">Fiction</option>
+                                </select>
+                                </div>
+                                <div class="spacing-right"></div>
+                                <div>
+                                    <select class="dropdown show" type="text" [(ngModel)]="bookFilter.authors">
+                                        <option value="" disabled selected>Choisir un auteur</option>
+                                        <option value="">Tous</option>
+                                        <option *ngFor="let book of books" value="{{book.volumeInfo.authors}}">{{book.volumeInfo.authors}}</option>   
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="spacing-bottom"></div>
+                        </div>
+
+                        <div *ngFor="let book of (books |  contentPipe:bookFilter.title | LanguePipe:bookFilter.language | Categoriepipe:bookFilter.categories | authorPipe:bookFilter.authors )" class="col-md-4">
+                            <div class="card" style="width: 18rem;height:450px;">
+                                <img *ngIf="book.volumeInfo.imageLinks!==undefined" class="card-img-top" src="{{book.volumeInfo.imageLinks.thumbnail}}" width="150px" height="250px" alt="Card image cap">
+                                <img *ngIf="book.volumeInfo.imageLinks==undefined" class="card-img-top" src="http://beenandgoing.com/wp-content/uploads/2015/04/LFTTVPBookImage.png" width="150px" height="250px" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{(book.volumeInfo.title.length>30)?(book.volumeInfo.title | slice:0:30)+'...':(book.volumeInfo.title)}}</h5>
+                                    <p *ngIf="book.volumeInfo.description==undefined" class="card-text">Déscription indisponible</p>
+                                    <p *ngIf="book.volumeInfo.description!=undefined" class="card-text">{{(book.volumeInfo.description.length>60)?(book.volumeInfo.description | slice:0:60)+'...':(book.volumeInfo.description)}}</p>
+                                    <button (click)="openLg(content)" class="btn btn-primary">Détails</button>
+                                    <ng-template #content let-c="close" let-d="dismiss">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" align="center">{{book.volumeInfo.title}}</h5>
+                                            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                                            <span aria-hidden="true">&times;</span>
+                                          </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div>
+                                                            <img src="{{book.volumeInfo.imageLinks.thumbnail}}" width="200px" height="300px" style="margin-right: 50px">
+                                                        </div>
+                                                        <div>
+                                                            <p class="card-text">
+                                                                L'auteur:
+                                                                <span *ngIf="book.volumeInfo.authors==undefined">Indisponible</span>
+                                                                <span *ngIf="book.volumeInfo.authors!==undefined">{{book.volumeInfo.authors}}</span>
+                                                            </p>
+                                                            <p>Editeur:
+                                                                <span *ngIf="book.volumeInfo.publisher==undefined">Indisponible</span>
+                                                                <span *ngIf="book.volumeInfo.publisher!==undefined">{{book.volumeInfo.publisher}}</span>
+                                                            </p>
+                                                            <p>Date de publication:
+                                                                <span *ngIf="book.volumeInfo.publishedDate==undefined">Indisponible</span>
+                                                                <span *ngIf="book.volumeInfo.publishedDate!==undefined">{{book.volumeInfo.publishedDate}}</span>
+                                                            </p>
+                                                            <p>Langue:
+                                                                <span *ngIf="book.volumeInfo.language==undefined">Indisponible</span>
+                                                                <span *ngIf="book.volumeInfo.language!==undefined">{{book.volumeInfo.language}}</span>
+                                                            </p>
+                                                            <p>Catégorie:
+                                                                <span *ngIf="book.volumeInfo.categories==undefined">Indisponible</span>
+                                                                <span *ngIf="book.volumeInfo.categories!==undefined">{{book.volumeInfo.categories}}</span>
+                                                            </p>
+                                                            <p>Lien:
+                                                                <span *ngIf="book.accessInfo.webReaderLink==undefined">Indisponible</span>
+                                                                <span *ngIf="book.accessInfo.webReaderLink!==undefined"><a href="{{book.accessInfo.webReaderLink}}">lire</a></span>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" (click)="c('Close click')">Fermer</button>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="spacing-bottom"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
