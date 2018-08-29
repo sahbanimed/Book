@@ -6,11 +6,11 @@
         <div class="col-md-2">
             <div class="card  ">
                 <div class="card-header text-white" style="background-color:#65c69c;">
-                    <h5 align="center ">Catégories</h5>
+                    <h5 align="center ">Filtre</h5>
                 </div>
                 <div class="card-body">
                     <p>
-                        <a (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">Langue</a>
+                        <a (click)="isCollapsed = !isCollapsed" class="btn btn-outline-info dropdown-toggle" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">Langue</a>
                     </p>
                     <div id="collapseExample" [ngbCollapse]="isCollapsed">
                         <div class="card">

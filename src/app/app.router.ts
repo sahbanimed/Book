@@ -4,7 +4,7 @@ import {ModuleWithProviders} from '@angular/core';
 import { AdDisplayBooksComponent } from './Views/ad-display-books/ad-display-books.component';
 
 export const router: Routes =[
-    {path : 'DisplayBooks',component : AdDisplayBooksComponent}
+    {path : '',component : AdDisplayBooksComponent}
 ];
 
 export const routes : ModuleWithProviders = RouterModule.forRoot(router);
